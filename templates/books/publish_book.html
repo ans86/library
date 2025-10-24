@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Publish Book{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+          <h3 class="text-center mb-4">📖 Publish a New Book</h3>
+
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Book Title</label>
+              <input type="text" name="title" class="form-control" placeholder="Enter book title" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Author Name</label>
+              <input type="text" name="author_name" class="form-control" value="{{ user.username }}" readonly>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Description</label>
+              <textarea name="description" class="form-control" rows="4" placeholder="Write something about the book..." required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Upload Cover Image</label>
+              <input type="file" name="cover_image" class="form-control">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Upload Book File (PDF)</label>
+              <input type="file" name="book_file" class="form-control" accept=".pdf">
+            </div>
+
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+              {% endfor %}
+            {% endif %}
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Publish</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
