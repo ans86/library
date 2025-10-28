@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import CustomUser
 
 
-# ------------------ REGISTER VIEW ------------------
+# Registration view
 
 def register_view(request):
     if request.method == "POST":
@@ -51,7 +51,7 @@ def register_view(request):
 
     return render(request, "users/register.html")
 
-# ------------------ LOGIN VIEW ------------------
+# Login view
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -74,7 +74,7 @@ def login_view(request):
     return render(request, "users/login.html")
 
 
-# ------------------ LOGOUT VIEW ------------------
+# Logout View
 @login_required
 def logout_view(request):
     logout(request)

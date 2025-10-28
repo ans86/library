@@ -1,8 +1,34 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %}Home - Library{% endblock %}
 {% block content %}
 <div class="text-center">
   <h1 class="mb-4">Welcome to the Library</h1>
   <p>Browse and discover books from different authors.</p>
+</div>
+
+<div class="row">
+  {% for book in books %}
+    <div class="col-md-3 mb-4">
+      <div class="card shadow ">
+        <img src="{{ book.cover_image.url }}" class="card-img-top rounded-top-4" alt="{{ book.title }}">
+        
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">{{ book.title }}</h5>
+          <p class="card-text text-muted small">By {{ book.author.username }}</p>
+          <p class="card-text">{{ book.description|truncatechars:100 }}</p>
+        </div>
+        
+        <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+          <small class="text-muted">{{ book.published_at|date:"M d, Y" }}</small>
+          <a href="{% url 'read_book' book.slug %}" target="_blank" class="btn btn-sm btn-primary">Read PDF</a>
+
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-center text-muted">No books available yet.</p>
+  {% endfor %}
 </div>
 {% endblock %}

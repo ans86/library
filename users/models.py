@@ -17,4 +17,4 @@ class CustomUser(AbstractUser):
 
 class UserConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'users'  # 👈 must match your folder name
+    name = 'users'
