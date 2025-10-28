@@ -10,8 +10,8 @@
 
 <div class="row">
   {% for book in books %}
-    <div class="col-md-3 mb-4">
-      <div class="card shadow ">
+    <div class="col-md-2 mb-2">
+      <div class="card shadow border-0 rounded-4 h-100">
         <img src="{{ book.cover_image.url }}" class="card-img-top rounded-top-4" alt="{{ book.title }}">
         
         <div class="card-body">
@@ -20,7 +20,7 @@
           <p class="card-text">{{ book.description|truncatechars:100 }}</p>
         </div>
         
-        <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+        <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
           <small class="text-muted">{{ book.published_at|date:"M d, Y" }}</small>
           <a href="{% url 'read_book' book.slug %}" target="_blank" class="btn btn-sm btn-primary">Read PDF</a>
 
