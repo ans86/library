@@ -4,9 +4,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser
 
-
-# Registration view
-
+# ----------------------
+# User Registration View
+# ----------------------
 def register_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -15,7 +15,8 @@ def register_view(request):
         password2 = request.POST.get("password2")
         role = request.POST.get("role")
 
-        if not username or not email or not password1 or not password2:
+        # Validation
+        if not all([username, email, password1, password2, role]):
             messages.error(request, "Please fill all fields.")
             return redirect("register")
 
@@ -31,27 +32,33 @@ def register_view(request):
             messages.error(request, "Email already registered!")
             return redirect("register")
 
+        # Create User
         user = CustomUser.objects.create_user(
             username=username,
             email=email,
             password=password1,
-            role=role
+            role=role,
         )
 
+        # Role-based permissions
         if role == "author":
-            user.can_upload_books = False
+            user.can_upload_books = False  # Needs staff approval
+            user.is_active = True          # Keep active (but cannot upload yet)
             user.save()
-            messages.info(request, "Author account created. Wait for admin approval.")
+            messages.info(request, "Author account created. Wait for staff approval to upload books.")
         else:
             user.can_upload_books = True
+            user.is_active = True
             user.save()
-            messages.success(request, "Account created successfully! You can login now.")
+            messages.success(request, "Account created successfully! You can log in now.")
 
         return redirect("login")
 
     return render(request, "users/register.html")
 
-# Login view
+# ----------------------
+# Login View
+# ----------------------
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -59,24 +66,25 @@ def login_view(request):
 
         user = authenticate(request, username=username, password=password)
 
-        if user is not None:
+        if user:
             if user.is_active:
                 login(request, user)
                 messages.success(request, f"Welcome back, {user.username}!")
                 return redirect("home")
             else:
                 messages.warning(request, "Your account is not active yet.")
-                return redirect("login")
         else:
             messages.error(request, "Invalid username or password!")
-            return redirect("login")
+
+        return redirect("login")
 
     return render(request, "users/login.html")
 
-
+# ----------------------
 # Logout View
+# ----------------------
 @login_required
 def logout_view(request):
     logout(request)
     messages.info(request, "You have been logged out.")
-    return redirect("login")
+    return redirect("home")

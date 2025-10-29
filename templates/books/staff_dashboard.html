@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+  <h2 class="fw-bold mb-4 text-center">📘 Staff Dashboard</h2>
+
+  <div class="row">
+    <!-- Authors -->
+    <div class="col-md-6">
+      <div class="card shadow border-0 rounded-4 mb-4">
+        <div class="card-header bg-primary text-white fw-semibold">
+          Authors
+        </div>
+        <div class="card-body p-0">
+          {% if all_authors %}
+            <ul class="list-group list-group-flush">
+              {% for author in all_authors %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ author.username }}
+                  {% if author.can_upload_books %}
+                    <span class="badge bg-success">Approved</span>
+                  {% else %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="p-3 text-muted">No authors found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Books -->
+    <div class="col-md-6">
+      <div class="card shadow border-0 rounded-4 mb-4">
+        <div class="card-header bg-secondary text-white fw-semibold">
+          Books
+        </div>
+        <div class="card-body p-0">
+          {% if all_books %}
+            <ul class="list-group list-group-flush">
+              {% for book in all_books %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{{ book.title }}</strong><br>
+                    <small class="text-muted">By {{ book.author.username }}</small>
+                  </div>
+                  {% if book.is_approved %}
+                    <span class="badge bg-success">Approved</span>
+                  {% else %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="p-3 text-muted">No books found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

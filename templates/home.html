@@ -10,25 +10,48 @@
 
 <div class="row">
   {% for book in books %}
-    <div class="col-md-2 mb-2">
-      <div class="card shadow border-0 rounded-4 h-100">
-        <img src="{{ book.cover_image.url }}" class="card-img-top rounded-top-4" alt="{{ book.title }}">
-        
-        <div class="card-body">
-          <h5 class="card-title fw-semibold">{{ book.title }}</h5>
-          <p class="card-text text-muted small">By {{ book.author.username }}</p>
-          <p class="card-text">{{ book.description|truncatechars:100 }}</p>
-        </div>
-        
-        <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
-          <small class="text-muted">{{ book.published_at|date:"M d, Y" }}</small>
-          <a href="{% url 'read_book' book.slug %}" target="_blank" class="btn btn-sm btn-primary">Read PDF</a>
+    <div class="col-md-3 mb-4">
+      <div class="card shadow-3  h-30 hover-shadow">
+       <!-- Book Cover -->
+<div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light" 
+     style="height: 300px; overflow: hidden; ">
+  <img src="{{ book.cover_image.url }}" 
+       class="w-100 h-100" 
+       style="object-fit: cover;" 
+       alt="{{ book.title }}" />
+  <a href="{% url 'read_book' book.slug %}" >
+    <div class="mask" style="background-color: rgba(0, 0, 0, 0.15)"></div>
+  </a>
+</div>
 
+        <!-- Card Body -->
+        <div class="card-body">
+          <h5 class="card-title fw-bold">{{ book.title }}</h5>
+          <p class="text-muted mb-1">By <span class="fw-semibold">{{ book.author.username }}</span></p>
+          <p class="card-text" style="max-height: 7.5rem; overflow: hidden; text-overflow: ellipsis;">
+            {{ book.description|truncatechars:300 }}
+          </p>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+          <small class="text-muted">
+            <i class="far fa-calendar-alt me-1"></i>{{ book.published_at|date:"M d, Y" }}
+          </small>
+          <a href="{% url 'read_book' book.slug %}" target="_blank" class="btn btn-sm btn-success">
+            <i class="fas fa-book-open me-1"></i> Read
+          </a>
         </div>
       </div>
     </div>
   {% empty %}
-    <p class="text-center text-muted">No books available yet.</p>
+    <div class="text-center py-5 text-muted">
+      <i class="fas fa-book-open fa-2x mb-2"></i>
+      <p>No books available yet.</p>
+    </div>
   {% endfor %}
 </div>
+
+
+
 {% endblock %}

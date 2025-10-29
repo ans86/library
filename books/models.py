@@ -5,21 +5,27 @@ from django.utils.text import slugify
 
 
 class Book(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="books"
+    )
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)  # new field
+    slug = models.SlugField(unique=True, blank=True)
     cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
-    file = models.FileField(upload_to='books/')
     description = models.TextField(blank=True)
     published_at = models.DateTimeField(auto_now_add=True)
-    is_approved = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=False)  # Staff approval
 
     def save(self, *args, **kwargs):
-        if not self.slug and self.file:
-            # PDF ka base name lete hain (sirf naam, extension ke bina)
-            filename = os.path.splitext(os.path.basename(self.file.name))[0]
-            # slugify kar ke slug me daal do
-            self.slug = slugify(filename)
+        # Slug bana lo agar nahi bana hua
+        if not self.slug:
+            if self.title:
+                self.slug = slugify(self.title)
+            elif self.file:
+                filename = os.path.splitext(os.path.basename(self.file.name))[0]
+                self.slug = slugify(filename)
+
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -31,23 +37,14 @@ class Book(models.Model):
         ]
 
 
+class Chapter(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='chapters')
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    order = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        ordering = ['order']
 
-
-# class Book(models.Model):
-#     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     title = models.CharField(max_length=200)
-#     cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
-#     file = models.FileField(upload_to='books/')
-#     description = models.TextField(blank=True)
-#     published_at = models.DateTimeField(auto_now_add=True)
-#     is_approved = models.BooleanField(default=False)  # Admin approval (optional)
-
-#     def __str__(self):
-#         return self.title
-    
-#     class Meta:
-#         permissions = [
-#             ("can_publish_book", "Can publish books"),
-#         ]
-
+    def __str__(self):
+        return f"{self.book.title} - {self.title}"

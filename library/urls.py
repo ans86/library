@@ -28,6 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', lambda request: redirect('home')),
     path('home', views.home, name='home'),
+    path('test', views.test, name='test'),
     #Apps
     path("users/", include("users.urls")),
     path("", include("books.urls")),

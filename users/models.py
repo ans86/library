@@ -12,7 +12,7 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='common_user')
     can_upload_books = models.BooleanField(default=False)
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
 
 class UserConfig(AppConfig):
